@@ -33,13 +33,37 @@ d3.geom.voronoi = function(points) {
   }
 
   function sites(data) {
-    return data.map(function(d, i) {
+    var sites = data.map(function(d, i) {
       return {
         x: Math.round(fx(d, i) / ε) * ε,
         y: Math.round(fy(d, i) / ε) * ε,
         i: i
       };
     });
+    var sitesLength = sites.length;
+    var passed = false;
+    while (!passed) {
+      passed = true;
+      for (var index = 0; index < sitesLength; ++index) {
+        var sx = sites[index].x;
+        var sy = sites[index].y;
+        for (var i = index + 1; i < sitesLength; ++i) {
+          var tx = sites[i].x;
+          var ty = sites[i].y;
+          if (sx === tx && sy === ty) {
+            // Duplicate detected.
+            passed = false;
+            // Shift it a little to make sure they are not the same. (Math.random() - 0.5) gives the range [-0.5, 0.5),
+            // which is multiplied by (ε * 100). (ε * 100) is 2 magnitudes larger than ε, which seems to be the limit
+            // (limit as in any difference smaller than ε will not be noticed by d3). So adding a jitter that's a little
+            // above the limit should avoid duplicates (we don't want to add a jitter that's too small to be noticed).
+            sites[i].x += ε * 100 * (Math.random() - 0.5);
+            sites[i].y += ε * 100 * (Math.random() - 0.5);
+          }
+        }
+      }
+    }
+    return sites;
   }
 
   voronoi.links = function(data) {

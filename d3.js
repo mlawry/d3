@@ -5383,13 +5383,32 @@
       return polygons;
     }
     function sites(data) {
-      return data.map(function(d, i) {
+      var sites = data.map(function(d, i) {
         return {
           x: Math.round(fx(d, i) / ε) * ε,
           y: Math.round(fy(d, i) / ε) * ε,
           i: i
         };
       });
+      var sitesLength = sites.length;
+      var passed = false;
+      while (!passed) {
+        passed = true;
+        for (var index = 0; index < sitesLength; ++index) {
+          var sx = sites[index].x;
+          var sy = sites[index].y;
+          for (var i = index + 1; i < sitesLength; ++i) {
+            var tx = sites[i].x;
+            var ty = sites[i].y;
+            if (sx === tx && sy === ty) {
+              passed = false;
+              sites[i].x += ε * 100 * (Math.random() - .5);
+              sites[i].y += ε * 100 * (Math.random() - .5);
+            }
+          }
+        }
+      }
+      return sites;
     }
     voronoi.links = function(data) {
       return d3_geom_voronoi(sites(data)).edges.filter(function(edge) {
