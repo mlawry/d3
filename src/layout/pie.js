@@ -24,6 +24,11 @@ d3.layout.pie = function() {
         ? endAngle.apply(this, arguments)
         : endAngle) - a)
         / d3.sum(values);
+    if (0 === d3.sum(values)) {
+        // Special handling for the case where all values are 0 because it will cause a division
+        // by 0, which makes k end up being Infinity, which causes various problems later on.
+        k = 0;
+    }
 
     // Optionally sort the data.
     var index = d3.range(data.length);
