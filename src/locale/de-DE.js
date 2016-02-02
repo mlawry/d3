@@ -1,12 +1,12 @@
 import "locale";
 
-d3.locale.de_DE = d3.locale({
+var d3_locale_deDE = d3.locale({
   decimal: ",",
   thousands: ".",
   grouping: [3],
   currency: ["", " €"],
   dateTime: "%A, der %e. %B %Y, %X",
-  date: "%e.%m.%Y",
+  date: "%d.%m.%Y",
   time: "%H:%M:%S",
   periods: ["AM", "PM"], // unused
   days: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
